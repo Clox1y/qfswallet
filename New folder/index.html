@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QFS Wallet</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #001f54;
+      color: white;
+      text-align: center;
+      animation: fadeIn 2s ease-in;
+      font-size: 24px; /* Increased base font size */
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .container {
+      max-width: 1200px; /* Maximum width */
+      margin: 0 auto;
+      padding: 40px; /* Increased padding */
+      animation: slideUp 1.5s ease-in-out;
+      overflow: hidden; /* Ensure no overflow */
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(100px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    header h1 {
+      font-size: 4.5rem; /* Increased title font size */
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(0, 0, 255, 0.8);
+    }
+
+    header h2 {
+      font-size: 2.8rem; /* Increased subtitle font size */
+      margin-bottom: 50px;
+    }
+
+    .balance {
+      display: flex;
+      flex-wrap: wrap; /* Allow wrapping for smaller screens */
+      justify-content: center;
+      margin-bottom: 50px;
+      gap: 20px; /* Space between balance boxes */
+    }
+
+    .balance-box, .status-box {
+      background: linear-gradient(145deg, #00448f, #007bff);
+      padding: 40px; /* Increased padding */
+      border-radius: 20px; /* Increased border-radius */
+      width: calc(45% - 20px); /* Adjusted for gap */
+      box-shadow: 0 6px 20px rgba(0, 0, 255, 0.6);
+      transition: transform 0.3s ease;
+      filter: blur(4px); /* Blurred by default */
+      user-select: none; /* Prevent text selection when blurred */
+    }
+
+    .balance-box:hover, .status-box:hover {
+      transform: scale(1.05); /* More pronounced hover effect */
+    }
+
+    .balance-box h3, .status-box h3 {
+      font-size: 2.2rem; /* Increased section title size */
+      color: #d4f1ff;
+    }
+
+    .balance-box p {
+      font-size: 4rem; /* Increased balance size */
+      filter: blur(4px); /* Blurred by default */
+    }
+
+    .confirmed {
+      color: lime;
+      font-weight: bold;
+      font-size: 2.5rem; /* Larger confirmation status */
+    }
+
+    .tasks {
+      background-color: #00448f;
+      padding: 40px; /* Increased padding */
+      border-radius: 20px;
+      margin-bottom: 50px;
+      box-shadow: 0 6px 20px rgba(0, 0, 255, 0.6);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .cashout-options h3 {
+      font-size: 2rem; /* Larger cash-out header */
+      margin-bottom: 30px;
+    }
+
+    .cashout-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 20px 50px; /* Increased button size */
+      font-size: 1.8rem; /* Increased font size */
+      border: none;
+      border-radius: 15px; /* Rounded the buttons more */
+      margin: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .cashout-btn:hover {
+      background-color: #00448f;
+      box-shadow: 0 0 20px #00ffcc;
+    }
+
+    footer {
+      margin-top: 50px;
+    }
+
+    .success {
+      color: lime;
+      font-size: 1.8rem; /* Increased success message size */
+      animation: blink 1s infinite alternate;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    footer small {
+      display: block;
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+
+    .get-in-touch {
+      margin-top: 50px;
+      font-size: 1.8rem; /* Increased font size for "GET IN TOUCH" */
+      color: #fff;
+      background: linear-gradient(145deg, #00448f, #007bff);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 255, 0.6);
+      transition: transform 0.3s ease;
+      animation: fadeIn 1.5s ease-in; /* Animation for the touch section */
+    }
+
+    .get-in-touch h3 {
+      font-size: 2.5rem; /* Header size */
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.7); /* Text shadow for emphasis */
+    }
+
+    .scroll-down {
+      display: none; /* Hidden by default */
+      margin: 20px 0;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .scroll-icon {
+      font-size: 3rem; /* Adjust scroll icon size */
+      color: #d4f1ff; /* Icon color */
+    }
+
+    /* Blur effect for withdrawal confirmation */
+    .blurred {
+      filter: blur(1000px); /* Increased blur value to maximum */
+      user-select: none; /* Prevent text selection when blurred */
+    }
+
+    /* Keep email link visible when blurring */
+    .email-link {
+      filter: none !important; /* Override blur for email */
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 3.5rem; /* Adjust title font size */
+      }
+      header h2 {
+        font-size: 2.2rem; /* Adjust subtitle font size */
+      }
+      .balance-box, .status-box {
+        width: calc(100% - 40px); /* Full width on mobile */
+      }
+      .cashout-btn {
+        width: 90%; /* Full width for buttons on mobile */
+      }
+      footer small {
+        font-size: 1rem; /* Smaller footnotes */
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 20px; /* Smaller base font size */
+      }
+      header h1 {
+        font-size: 3rem; /* Adjust title font size */
+      }
+      header h2 {
+        font-size: 1.8rem; /* Adjust subtitle font size */
+      }
+      .get-in-touch {
+        font-size: 1.5rem; /* Smaller font for contact section */
+      }
+      .cashout-btn {
+        padding: 15px 30px; /* Smaller button padding */
+        font-size: 1.5rem; /* Smaller font size */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>PERSONAL QFS WALLET</h1>
+      <h2>Welcome back!</h2>
+    </header>
+    
+    <section class="balance">
+      <div class="balance-box">
+        <h3>Total Balance</h3>
+        <p>$XX,XXX,XXX.XX</p>
+        <span>(Taxes already covered)</span>
+      </div>
+      <div class="status-box">
+        <h3>Product Registration Status</h3>
+        <p class="confirmed">Confirmed</p>
+      </div>
+    </section>
+
+    <section class="tasks">
+      <h3>Pending Tasks</h3>
+      <p>You don't have any pending tasks at the moment</p>
+    </section>
+
+    <section class="cashout-options">
+      <h3>Cash Out Options</h3>
+      <button class="cashout-btn" onclick="startWithdrawal('Wire Transfer')">Wire Transfer</button>
+      <button class="cashout-btn" onclick="startWithdrawal('Credit Card')">Credit Card</button>
+      <button class="cashout-btn" onclick="startWithdrawal('Crypto')">Crypto</button>
+    </section>
+    
+    <footer>
+      <p>Withdrawal Process <span class="success">Successfully Initiated!</span></p>
+      <small>Note: Funds transfer to your bank can take up to 30 days.</small>
+      <div class="get-in-touch">
+        <h3>GET IN TOUCH:</h3>
+        <p><a href="mailto:claudiawarnertrb@gmail.com" class="email-link" style="color: #ffcc00;">claudiawarnertrb@gmail.com</a></p>
+        <small>AMERICAN DREAM QFS © 2024</small>
+        <small>This website, its owners, and associated parties are not affiliated with any politician, political campaign, or political organization. We maintain a completely independent stance and do not endorse or support any political figure or agenda.</small>
+        <small>This Innovative QFS Experience is intended strictly for testing purposes and is designed for individuals who want to experience and explore future design concepts. It is not meant for any financial transactions or real-world applications.</small>
+        <small>Please note that this is a digital product. After purchase, please allow up to 24 hours to receive the product. The Innovative QFS Experience is provided solely for sampling and design purposes. Unauthorized duplication, reproduction, or publication of any materials from this site is strictly prohibited.</small>
+        <small>The Innovative QFS Experience aims to give users an opportunity to see and interact with potential future designs. It is important to clarify that while we strive to present accurate and realistic representations, this is a conceptual exploration and does not reflect any specific product or offering.</small>
+        <small>By engaging with our product, you acknowledge and accept that the Innovative QFS Experience is a conceptual prototype. Our aim is to offer a glimpse into potential future technologies, and your participation helps us refine and enhance our offerings. We appreciate your understanding and cooperation in adhering to these guidelines.</small>
+        <small>Thank you for choosing the Innovative QFS Experience for your exploration of future designs. We look forward to your feedback and hope you enjoy this unique experience.</small>
+      </div>
+    </footer>
+
+    <div class="scroll-down">
+      <span class="scroll-icon"></span>
+      <p></p>
+    </div>
+  </div>
+  <script>
+    function startWithdrawal(method) {
+      // Blur all content except the email when cash-out options are clicked
+      const container = document.querySelector('.container');
+      const emailLink = document.querySelector('.email-link');
+
+      // Add the blurred class to the container
+      container.classList.add('blurred');
+      emailLink.style.filter = 'none'; // Keep email link visible
+
+      // Redirect to withdrawal confirmation page after a short delay
+      setTimeout(() => {
+        window.location.href = `withdrawal.html?method=${method}`;
+      }, 500); // Adjust delay as needed
+    }
+
+    // Check if we need to show the scroll down indicator on page load
+    window.onload = function() {
+      const scrollIndicator = document.querySelector('.scroll-down');
+      if (document.body.scrollHeight > window.innerHeight) {
+        scrollIndicator.style.display = 'block'; // Show scroll indicator if content is overflowing
+      }
+    };
+  </script>
+<a href="https://www.americandreamqfs.com/claudiawarnertrb" target="_self">Visit my website</a>
+
+</body>
+</html>

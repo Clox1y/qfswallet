@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdrawal Confirmation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #001f54;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #d4f1ff;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin: 15px 0;
+    }
+
+    .countdown {
+      font-size: 1.5rem;
+      margin: 20px 0;
+      color: lime;
+    }
+
+    .apology {
+      background: rgba(0, 72, 145, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 30px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .message {
+      display: none;
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+
+    .email-link {
+      color: #00ffcc;
+      font-weight: bold; 
+      cursor: pointer; /* Change cursor to pointer for better UX */
+    }
+
+    .info-button {
+      background-color: #00ffcc;
+      border: none;
+      border-radius: 5px;
+      color: #001f54;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+      margin-left: 10px;
+    }
+
+    .info-button:hover {
+      background-color: #00cc99;
+    }
+
+    footer {
+      margin-top: 40px;
+    }
+
+    small {
+      display: block;
+      margin-top: 15px;
+      font-size: 1rem;
+      color: #ccc;
+    }
+
+    .blurred {
+      filter: blur(8px); /* Increased blur for better obscurity */
+      user-select: none;
+    }
+
+    .unblurred {
+      position: relative;
+      z-index: 1; 
+      display: inline-block; 
+      margin-top: 10px; 
+      filter: blur(0px);
+    }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p, .countdown, .email-link {
+        font-size: 1rem;
+      }
+      
+      .info-button {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="blurred">
+    <h1>Withdrawal Process Already Started</h1>
+    <p>Your withdrawal process has already started. If you wish to stop the withdrawal, please contact our support team immediately.</p>
+    <p>If more than 30 days have passed since you received your QFS Wallet and your funds have not yet appeared in your bank account, please contact us at</p>
+  </div>
+  <div class="unblurred">
+    <span class="email-link" onclick="sendEmail()">claudiawarnertrb@gmail.com</span>
+    <button class="info-button" onclick="handleMoreInfo()">Click here for more information</button>
+  </div>
+  <div class="blurred">
+    <div class="countdown" id="countdown"></div>
+    <div class="message" id="message">Your countdown has ended! Please contact us at <a href="mailto:claudiawarnertrb@gmail.com" class="email-link">claudiawarnertrb@gmail.com</a>.</div>
+    
+    <div class="apology">
+      <h2>We Sincerely Apologize</h2>
+      <p>We understand there has been a lot of confusion regarding cashouts, and many clients have experienced delays in receiving their funds. Please know that we are working diligently to resolve these issues and expedite the process for everyone.</p>
+      <p>Your patience is greatly appreciated as we navigate these challenges together. Thank you for choosing us!</p>
+      <p>— Agent Claudia Warner</p>
+    </div>
+    
+    <footer>
+      <small>AMERICAN DREAM QFS © 2024</small>
+    </footer>
+  </div>
+
+  <script>
+    function sendEmail() {
+      window.open('mailto:claudiawarnertrb@gmail.com?subject=Withdrawal Inquiry&body=Hello Claudia,%0D%0A%0D%0AI would like more information regarding my withdrawal process. Thank you!');
+    }
+
+    function handleMoreInfo() {
+      const message = prompt('For more information, please enter your message:');
+      if (message) {
+        sendEmail();
+      }
+    }
+
+    // Get the query parameter for the method
+    const urlParams = new URLSearchParams(window.location.search);
+    const method = urlParams.get('method');
+    
+    // Set the countdown duration based on the method
+    let countdownDuration;
+    if (method === 'Crypto') {
+      countdownDuration = 10; // 10 days for Crypto
+    } else {
+      countdownDuration = 30; // 30 days for Wire Transfer and Credit Card
+    }
+
+    // Calculate the end date
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + countdownDuration);
+
+    // Update the countdown every second
+    const countdownElement = document.getElementById('countdown');
+    const messageElement = document.getElementById('message');
+
+    const countdownInterval = setInterval(() => {
+      const now = new Date();
+      const remainingTime = endDate - now;
+
+      // Calculate days, hours, minutes, and seconds
+      const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+      // Display the countdown
+      countdownElement.innerHTML = `Time Remaining: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      // Check if the countdown is over
+      if (remainingTime < 0) {
+        clearInterval(countdownInterval);
+        countdownElement.style.display = 'none'; // Hide countdown
+        messageElement.style.display = 'block'; // Show message
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
